@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bulls And Cows Game</title>
+    <style>
+
+        form {
+            padding-top: 24px;
+        }
+        img {
+            height: 60px;
+            width: 60px;
+        }
+        #guess_cell {
+            border: 1px solid black;
+            width: 70px;
+            height: 70px;
+            font-size: 30px;
+            text-align: center;
+        }
+         #score_cell {
+            border: 1px solid white;
+            width: 70px;
+            height: 70px;
+            font-size: 30px;
+            text-align: center;
+        }
+        #inputfield {
+            width: 120px;
+            font-size: 24px;
+        }
+        #inputbutton{
+            font-size: 24px;
+        }
+        #container {
+            display: flex;
+            justify-content: center;
+        }
+        #board_div {
+            float: left;
+        }
+        #message_div {
+            width:100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id = "container">
+        <div id = "board_div">
+            <table>
+                {% for i in range(8) %}
+                    <tr>
+                        {% for j in range(5) %}
+                        <td id="guess_cell">
+                            {% if game[i][j] %}
+                                {{ game[i][j] }}
+                            {% else %}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div id="score_div ">
+             <table>
+                {% for i in range(8) %}
+                    <tr>
+                        {% for j in range(5) %}
+                        <td id="score_cell">
+                            {% if score[i][j] %}
+                                {% if score[i][j] == 1 %}
+                                <img src="/static/bull-silhouette.png" title="means a correct letter in the correct position">
+                                {% elif score[i][j] == 2 %}
+                                <img src="/static/cow-silhouette.png" title="mean a correct letter but in the wrong position">
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div id="message_div">
+        {% if status != False %}
+         <form method="POST">
+            <input type="text" id="inputfield" name="guess" title="Enter a 5-letter word with no repeating letters"
+                   pattern="^[a-zA-Z]{5}$" required/>
+            <input type="submit" id="inputbutton" value="Submit" />
+         </form>
+        {% endif %}
+        <p>{{ message }}</p>
+        {% if status == False %}
+        <p>Would you like to play again?</p>
+        <form method="POST">
+            <input type="submit" value="yes" name="guess" />
+        </form>
+        {% endif %}
+    </div>
+<!--<a href="https://www.flaticon.com/free-icons/bull" title="bull icons">Bull icons created by Freepik - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/cow" title="cow icons">Cow icons created by Freepik - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/bull" title="bull icons">Bull icons created by Freepik - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/cow" title="cow icons">Cow icons created by Victoruler - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/bull" title="bull icons">Bull icons created by monkik - Flaticon</a>-->
+</body>
+</html>
