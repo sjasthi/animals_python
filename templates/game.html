@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Bulls And Cows Game</title>
+    <script
+      src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"
+      data-auto-replace-svg="nest"
+    ></script>
     <style>
 
         form {
@@ -11,6 +15,36 @@
         img {
             height: 60px;
             width: 60px;
+        }
+        html,
+        body {
+          height: 100%;
+          font-family: "Helvetica";
+          margin: 0;
+          padding: 0;
+        }
+        header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid rgb(58, 58, 60);
+          margin-bottom: 48px;
+        }
+        #settings {
+            margin-left:12px;
+        }
+        #help, #stats, #settings {
+          color: rgb(58, 58, 60);
+          font-size: 1 rem;
+          cursor: pointer;
+        }
+
+        #container {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          height: 100%;
+          width: 100%;
         }
         #guess_cell {
             border: 1px solid black;
@@ -21,6 +55,7 @@
         }
          #score_cell {
             border: 1px solid white;
+            background-color: #FFFEF2;
             width: 70px;
             height: 70px;
             font-size: 30px;
@@ -33,77 +68,323 @@
         #inputbutton{
             font-size: 24px;
         }
-        #container {
+        #board-container {
             display: flex;
             justify-content: center;
         }
         #board_div {
             float: left;
         }
+        #input_div {
+            width:100%;
+            text-align: center;
+        }
+        #btn{
+            background-color: #FFFFFF;
+            border:0px;
+        }
         #message_div {
             width:100%;
             text-align: center;
         }
+        .modal {
+          display: none;
+          position: fixed;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgb(0, 0, 0);
+          background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+          background-color: rgb(18, 18, 19);
+          margin: 5% auto;
+          padding: 20px;
+          width: 80%;
+          color: gainsboro;
+          max-width: 500px;
+        }
+
+        .modal-content hr {
+          border: 1px solid rgb(58, 58, 60);
+        }
+
+        /* The Close Button */
+        .close {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div id = "container">
-        <div id = "board_div">
-            <table>
-                {% for i in range(8) %}
-                    <tr>
-                        {% for j in range(5) %}
-                        <td id="guess_cell">
-                            {% if game[i][j] %}
-                                {{ game[i][j] }}
-                            {% else %}
-                            {% endif %}
-                        </td>
+    <div id="container">
+        <div id="game">
+            <header>
+                  <button id="btn" onclick="helpFunction()"><i class="far fa-question-circle" id="help"></i></button>
+                  <h1 class="title">ANIMAL KINGDOM</h1>
+                  <div><button id="btn" onclick="statsFunction()"><i class="fas fa-chart-bar" id="stats"></i></button>
+                      <button id="btn" onclick="settingsFunction()"><i class="fa-solid fa-gear" id="settings"></i></div></button>
+            </header>
+            <div id = "board-container">
+                <div id = "board_div">
+                    <table>
+                        {% for i in range(num_tries) %}
+                            <tr>
+                                {% for j in range(word_length) %}
+                                <td id="guess_cell">
+                                    {% if game[i][j] %}
+                                        {{ game[i][j] }}
+                                    {% else %}
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
                         {% endfor %}
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div id="score_div ">
-             <table>
-                {% for i in range(8) %}
-                    <tr>
-                        {% for j in range(5) %}
-                        <td id="score_cell">
-                            {% if score[i][j] %}
-                                {% if score[i][j] == 1 %}
-                                <img src="/static/bull-silhouette.png" title="means a correct letter in the correct position">
-                                {% elif score[i][j] == 2 %}
-                                <img src="/static/cow-silhouette.png" title="mean a correct letter but in the wrong position">
-                                {% endif %}
-                            {% endif %}
-                        </td>
+                    </table>
+                    <div id="input_div">
+                        {% if status != False %}
+                         <form method="POST">
+                            <input type="text" id="inputfield" name="guess" title="Enter a 5-letter word with no repeating letters"
+                                   required/>
+                            <input type="submit" id="inputbutton" value="Submit" />
+                         </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="score_div ">
+                     <table>
+                        {% for i in range(num_tries) %}
+                            <tr>
+                                {% for j in range(word_length) %}
+                                <td id="score_cell">
+                                    {% if score[i][j] %}
+                                        {% if score[i][j] == 1 %}
+                                            {% if language == "Telugu" %}
+                                                <img src= {{ icon_one }} >
+                                            {% else %}
+                                                <img src="/static/bull_1.png" title="means a correct letter in the correct position">
+                                            {% endif %}
+                                        {% elif score[i][j] == 2 %}
+                                            {% if language == "Telugu" %}
+                                                <img src= {{ icon_two }} >
+                                            {% else %}
+                                                <img src="/static/cow_1.png" title="means a correct letter but in the wrong position">
+                                            {% endif %}
+                                        {% elif score[i][j] == 3 %}
+                                            {% if language == "Telugu" %}
+                                                <img src= {{ icon_three }} >
+                                            {% endif %}
+                                        {% elif score[i][j] == 4 %}
+                                            {% if language == "Telugu" %}
+                                                <img src= {{ icon_four }}>
+                                            {% endif %}
+                                        {% elif score[i][j] == 5 %}
+                                            {% if language == "Telugu" %}
+                                                <img src= {{ icon_five }} >
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
                         {% endfor %}
-                    </tr>
-                {% endfor %}
-            </table>
+                    </table>
+                </div>
+            </div>
+            <div id="message_div">
+                <p>{{ message }}</p>
+                {% if status == False %}
+                <p>Would you like to play again?</p>
+                <form method="POST">
+                    <input type="submit" value="yes" name="guess" />
+                </form>
+                {% endif %}
+            </div>
+
+            <div id="help-modal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                  <span class="close" id="close-help">&times;</span>
+
+                  <p>How to play Animal Kingdom:</p>
+
+                  <p>
+                    This is a word guessing game where you try to guess the mystery word.
+                      To begin, guess a word of the same length as the number of boxes in the guess row
+                      and does not contain any repeating characters.
+                  </p>
+
+                  <p>
+                    After each guess, you will be given animal icons next to the same row that indicate
+                      how well you guessed.
+                      Different animal icons have different meanings.
+                        Elephant = a correct logical character in the correct position in the mystery word.
+                        Fish = a correct logical character but not in the correct position in the mystery word.
+                        Horse = a correct base character in the correct position in the mystery word.
+                        Frog = a correct base character but not in the correct position in the mystery word.
+
+                      Please note that the animal icons on the scorecard do not directly correspond
+                      to the characters in the same position in the guess word.  They only give you an indication of
+                      how many of each type of animal icon is in the guess word.
+
+                  </p>
+
+                  <img src="/static/elephant_1.png" id="examples" />
+
+                  <hr />
+                  <p></p>
+                </div>
+            </div>
+
+            <div id="stats-modal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                  <span class="close" id="close-stats">&times;</span>
+
+                  <h2>STATISTICS</h2>
+
+                  <h3><strong>Total</strong>: <span id="total-played"></span></h3>
+
+                  <h3><strong>Wins</strong>: <span id="total-wins"></span></h3>
+
+                  <h3><strong>Win %</strong>: <span id="win-pct"></span></h3>
+
+                  <h3>
+                    <strong>Current Streak</strong>: <span id="current-streak"></span>
+                  </h3>
+                </div>
+            </div>
+
+            <div id="settings-modal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                  <span class="close" id="close-settings">&times;</span>
+
+                  <h2>SETTINGS</h2>
+
+                  <h3><strong>Colors or Animals</strong>: <span id=""></span></h3>
+
+                  <h3><strong>Word Length</strong>: <span id=""></span></h3>
+
+                  <h3><strong>Number of Attempts</strong>: <span id=""></span></h3>
+
+                  <h3>
+                    <strong>Dictionary Check</strong>: <span id=""></span>
+                  </h3>
+                </div>
+            </div>
         </div>
     </div>
-    <div id="message_div">
-        {% if status != False %}
-         <form method="POST">
-            <input type="text" id="inputfield" name="guess" title="Enter a 5-letter word with no repeating letters"
-                   pattern="^[a-zA-Z]{5}$" required/>
-            <input type="submit" id="inputbutton" value="Submit" />
-         </form>
-        {% endif %}
-        <p>{{ message }}</p>
-        {% if status == False %}
-        <p>Would you like to play again?</p>
-        <form method="POST">
-            <input type="submit" value="yes" name="guess" />
-        </form>
-        {% endif %}
-    </div>
+    <script>
+    function helpFunction() {
+        const modal = document.getElementById("help-modal");
+
+        // Get the button that opens the modal
+        const btn = document.getElementById("help");
+
+        // Get the <span> element that closes the modal
+        const span = document.getElementById("close-help");
+
+        // When the user clicks on the button, open the modal
+        btn.addEventListener("click", function () {
+          modal.style.display = "block";
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        span.addEventListener("click", function () {
+          modal.style.display = "none";
+        });
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.addEventListener("click", function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        });
+    }
+
+    function statsFunction() {
+        const modal = document.getElementById("stats-modal");
+
+        // Get the button that opens the modal
+        const btn = document.getElementById("stats");
+
+        // Get the <span> element that closes the modal
+        const span = document.getElementById("close-stats");
+
+        // When the user clicks on the button, open the modal
+        btn.addEventListener("click", function () {
+          // update stats here
+          modal.style.display = "block";
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        span.addEventListener("click", function () {
+          modal.style.display = "none";
+        });
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.addEventListener("click", function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        });
+    }
+
+    function settingsFunction() {
+        const modal = document.getElementById("settings-modal");
+
+        // Get the button that opens the modal
+        const btn = document.getElementById("settings");
+
+        // Get the <span> element that closes the modal
+        const span = document.getElementById("close-settings");
+
+        // When the user clicks on the button, open the modal
+        btn.addEventListener("click", function () {
+          // update stats here
+          modal.style.display = "block";
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        span.addEventListener("click", function () {
+          modal.style.display = "none";
+        });
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.addEventListener("click", function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        });
+    }
+
+    </script>
 <!--<a href="https://www.flaticon.com/free-icons/bull" title="bull icons">Bull icons created by Freepik - Flaticon</a>-->
 <!--<a href="https://www.flaticon.com/free-icons/cow" title="cow icons">Cow icons created by Freepik - Flaticon</a>-->
 <!--<a href="https://www.flaticon.com/free-icons/bull" title="bull icons">Bull icons created by Freepik - Flaticon</a>-->
 <!--<a href="https://www.flaticon.com/free-icons/cow" title="cow icons">Cow icons created by Victoruler - Flaticon</a>-->
 <!--<a href="https://www.flaticon.com/free-icons/bull" title="bull icons">Bull icons created by monkik - Flaticon</a>-->
+
+<!--<a href="https://www.flaticon.com/free-icons/cow" title="cow icons">Cow icons created by Flat Icons - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/bull" title="bull icons">Bull icons created by Freepik - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/elephant" title="elephant icons">Elephant icons created by Flat Icons - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/horse" title="horse icons">Horse icons created by Freepik - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/frog" title="frog icons">Frog icons created by Good Ware - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/mouse" title="mouse icons">Mouse icons created by Freepik - Flaticon</a>-->
+<!--<a href="https://www.flaticon.com/free-icons/fish" title="fish icons">Fish icons created by Freepik - Flaticon</a>-->
 </body>
 </html>
