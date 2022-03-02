@@ -36,13 +36,13 @@ icon_one = "/static/elephant_1.png"
 #Icon for correct logical character in the wrong position (2)
 icon_two = "/static/fish_1.png"
 
-#Icon for correct base character in the correct position (3)
+#Icon for correct a base character in the correct position (3)
 icon_three = "/static/horse_1.png"
 
 #Icon for correct base character in the wrong position (4)
 icon_four = "/static/frog_1.png"
 
-#Icon for a character that does not appear in the word (5)
+#Icon for character that does not appear in the word (5)
 icon_five = "/static/mouse_1.png"
 
 ###################################################################
