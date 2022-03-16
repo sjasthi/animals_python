@@ -42,7 +42,7 @@ icon_three = "/static/horse_1.png"
 #Icon for correct base character in the wrong position (4)
 icon_four = "/static/frog_1.png"
 
-#Icon for character that does not appear in the word (5)
+#Icon for  character that does not appear in the word (5)
 icon_five = "/static/mouse_1.png"
 
 ###################################################################
@@ -115,6 +115,21 @@ def play():
             while input_check(guess) == False:
                 session["message"] = 'Oops. Make sure you are guessing a word with no repeating letters.'
                 return redirect(url_for("index"))
+
+            #############get guess base chars####################
+            params = {'string': guess, 'language': language}
+            response_basechars = requests.get(request_basecharpath, params,
+                                              headers={
+                                                  'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11'})
+
+            # convert text response to json array
+            json_guessbasechararray = json.loads(response_basechars.text[2:])
+            print(json_guessbasechararray)
+            print("json_guessbasechararray['data']: ", json_guessbasechararray['data'])
+            guessbaseword_array = json_guessbasechararray['data']
+            print("guess base array length: ", len(guessbaseword_array))
+            #####################################################################
+
             #process guess
             for x in range(len(guess_array)):
                 session["board"][counter][x] = guess_array[x]
@@ -124,8 +139,9 @@ def play():
                         session["score"][counter][x] = 1
                     else:
                         session["score"][counter][x] = 2
-                elif guess_array[x] in baseword_array:
-                    if x == baseword_array.index(guess_array[x]):
+
+                elif guessbaseword_array[x] in baseword_array:
+                    if x == baseword_array.index(guessbaseword_array[x]):
                         session["score"][counter][x] = 3
                     else:
                         session["score"][counter][x] = 4
