@@ -9,18 +9,18 @@ import requests
 #################################################################################################################
 
 #add language variable and CSV filepath for English quotes
-# language = "English"
+language = "English"
 # input_file = "static/words_english.csv"
 
 #add language variable and CSV filepath for Telugu quotes
-language = "Telugu"
-input_file = "static/words_telugu.csv"
+# language = "Telugu"
+#input_file = "static/words_telugu.csv"
 
-#choose word length
-word_length = 4
+#choose initial word length
+word_length = 5
 
-#choose number of tries
-num_tries = 4
+#choose initial number of tries
+num_tries = 6
 
 #add get logical characters API path
 request_path = "https://indic-wp.thisisjava.com/api/getLogicalChars.php"
@@ -98,6 +98,10 @@ def index():
 @app.route('/', methods=['POST'])
 def play():
 
+    global num_tries
+    global word_length
+    global language
+    global word_index
     global wordlist
     global word
     global word_array
@@ -117,17 +121,18 @@ def play():
                 return redirect(url_for("index"))
 
             #############get guess base chars####################
-            params = {'string': guess, 'language': language}
-            response_basechars = requests.get(request_basecharpath, params,
+            if language =="Telugu":
+                params = {'string': guess, 'language': language}
+                response_basechars = requests.get(request_basecharpath, params,
                                               headers={
                                                   'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11'})
 
-            # convert text response to json array
-            json_guessbasechararray = json.loads(response_basechars.text[2:])
-            print(json_guessbasechararray)
-            print("json_guessbasechararray['data']: ", json_guessbasechararray['data'])
-            guessbaseword_array = json_guessbasechararray['data']
-            print("guess base array length: ", len(guessbaseword_array))
+                # convert text response to json array
+                json_guessbasechararray = json.loads(response_basechars.text[2:])
+                print(json_guessbasechararray)
+                print("json_guessbasechararray['data']: ", json_guessbasechararray['data'])
+                guessbaseword_array = json_guessbasechararray['data']
+                print("guess base array length: ", len(guessbaseword_array))
             #####################################################################
 
             #process guess
@@ -140,7 +145,7 @@ def play():
                     else:
                         session["score"][counter][x] = 2
 
-                elif guessbaseword_array[x] in baseword_array:
+                elif language == "Telugu" and guessbaseword_array[x] in baseword_array:
                     if x == baseword_array.index(guessbaseword_array[x]):
                         session["score"][counter][x] = 3
                     else:
@@ -168,7 +173,16 @@ def play():
         counter = 0
         status = True
         session.clear()
-        word = choose_word(wordlist, language)
+        if language != request.form['lang_toggle'] or word_length != request.form['c_length'] or num_tries != int(request.form['c_numattempts']):
+            language = request.form['lang_toggle']
+            word_length = int(request.form['c_length'])
+            num_tries = int(request.form['c_numattempts'])
+            word_index = 0
+            wordlist.clear()
+            wordlist = create_wordlist()
+            word = choose_word(wordlist, language)
+        else:
+            word = choose_word(wordlist, language)
         print(word)
         return redirect(url_for("index"))
 
@@ -177,7 +191,12 @@ def create_wordlist():
 
     global wordlist
 
-    if (language == "Telugu"):
+    ###############To Be Implemented - Need to change name of csv files
+    #input_file = "static/words_" + language + "_" + word_length + ".csv"
+    #####temp
+    input_file = "static/words_" + language.lower() + ".csv"
+
+    if language == "Telugu":
         #open input file
         with open(input_file, 'r', encoding='utf-8') as csvfile:
             readCSV = csv.reader(csvfile, delimiter=',')
@@ -217,20 +236,19 @@ def choose_word(wordlist, language):
     # convert text response to json array
     json_array = json.loads(response.text[2:])
     print("json_array['data']: ", json_array['data'])
-
-    response_basechars = requests.get(request_basecharpath, params,
+    word_array = json_array['data']
+    print("array length: ", len(word_array))
+    if language == "Telugu":
+        response_basechars = requests.get(request_basecharpath, params,
                             headers={'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11'})
 
 
-    # convert text response to json array
-    json_basechararray = json.loads(response_basechars.text[2:])
-    print(json_basechararray)
-    print("json_basechararray['data']: ", json_basechararray['data'])
-
-    word_array = json_array['data']
-    baseword_array = json_basechararray['data']
-    print("array length: ", len(word_array))
-    print("base array length: ", len(baseword_array))
+        # convert text response to json array
+        json_basechararray = json.loads(response_basechars.text[2:])
+        print(json_basechararray)
+        print("json_basechararray['data']: ", json_basechararray['data'])
+        baseword_array = json_basechararray['data']
+        print("base array length: ", len(baseword_array))
 
     if len(word_array) != word_length:
         choose_word(wordlist,language)
@@ -272,6 +290,8 @@ def input_check(input):
 
 def main():
     global word
+    global wordlist
+
     wordlist = create_wordlist()
     word = choose_word(wordlist,language)
     # if __name__ == "__main__":
