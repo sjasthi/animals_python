@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Word</title>
+</head>
+<body>
+      <form action="/myword" method="POST">
+           <label for="custom_lang"><strong>Language</strong>: <span id=""></span></label>
+           <select id="custom_lang" name="custom_lang">
+              <option value = "English" >English</option>
+              <option value = "Telugu">Telugu</option>
+           </select>
+        <br>
+        <br>
+           <label for="custom_input"><strong>Word</strong>: </label>
+           <input type="text" id="custom_input" name="custom_input" title="Enter a word with no repeating letters"
+                                   required/>
+        <br>
+        <br>
+          <label for="custom_attempts"><strong>Number of Attempts</strong>: <span id=""></span></label>
+          <select id="custom_attempts" name="custom_attempts">
+              <option value = 4>4</option>
+              <option value = 5>5</option>
+              <option value = 6>6</option>
+              <option value = 7>7</option>
+              <option value = 8>8</option>
+              <option value = 9>9</option>
+              <option value = 10>10</option>
+              <option value = 11>11</option>
+              <option value = 12>12</option>
+              <option value = 13>13</option>
+              <option value = 14>14</option>
+              <option value = 15>15</option>
+              <option value = 16>16</option>
+          </select>
+      <br>
+	  <br>
+      <div id="message_div">
+
+              <p>{{ message }}</p>
+
+      </div>
+      <button type="submit" id="submit_button" name="guess" value="yes">Submit Word</button>
+      </form>
+</body>
+</html>
