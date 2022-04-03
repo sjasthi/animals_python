@@ -3,8 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>My Word</title>
+<style>
+ html,
+        body {
+          height: 100%;
+          font-family: "Helvetica";
+          margin: 0;
+          padding: 0;
+        }
+        header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 66%;
+          border-bottom: 1px solid rgb(58, 58, 60);
+          margin-bottom: 48px;
+        }
+#container {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          height: 100%;
+          width: 100%;
+        }
+.float_left{
+    float:left;
+}
+.title{
+    margin-right: 33%;
+}
+a:link {
+   text-decoration: none;
+}
+
+</style>
 </head>
 <body>
+      <div id="container">
+      <header>
+          <a href="/">< back</a>
+          <h1 class="title">ANIMAL KINGDOM</h1>
+      </header>
+          <h2>Custom Word</h2>
+          <p>Choose a language and enter a 4-8 character word to create a game.  Your word must not create any duplicate characters.</p>
       <form action="/myword" method="POST">
            <label for="custom_lang"><strong>Language</strong>: <span id=""></span></label>
            <select id="custom_lang" name="custom_lang">
@@ -18,7 +59,7 @@
                                    required/>
         <br>
         <br>
-          <label for="custom_attempts"><strong>Number of Attempts</strong>: <span id=""></span></label>
+          <!--<label for="custom_attempts"><strong>Number of Attempts</strong>: <span id=""></span></label>
           <select id="custom_attempts" name="custom_attempts">
               <option value = 4>4</option>
               <option value = 5>5</option>
@@ -33,7 +74,7 @@
               <option value = 14>14</option>
               <option value = 15>15</option>
               <option value = 16>16</option>
-          </select>
+          </select>-->
       <br>
 	  <br>
       <div id="message_div">
@@ -43,5 +84,6 @@
       </div>
       <button type="submit" id="submit_button" name="guess" value="yes">Submit Word</button>
       </form>
+      </div>
 </body>
 </html>

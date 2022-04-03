@@ -128,19 +128,19 @@
           cursor: pointer;
         }
          .switch {
-	position: relative;
-	display: block;
-	vertical-align: top;
-	width: 100px;
-	height: 30px;
-	padding: 3px;
-	margin: 0 10px 10px 0;
-	background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
-	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
-	border-radius: 18px;
-	box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
-	cursor: pointer;
-	box-sizing:content-box;
+        position: relative;
+        display: block;
+        vertical-align: top;
+        width: 100px;
+        height: 30px;
+        padding: 3px;
+        margin: 0 10px 10px 0;
+        background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
+        background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
+        border-radius: 18px;
+        box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        box-sizing:content-box;
 }
 .switch-input {
 	position: absolute;
@@ -248,17 +248,41 @@
     margin-bottom: 8px;
     height: 40px;
 }
-
-    </style>
+.float_left {
+    float:left;
+}
+#lang_label {
+    margin-right:18px;
+}
+#icon_box{
+    padding-top:16px;
+}
+a:link {
+   text-decoration: none;
+}
+#custom_link{
+    margin-left: 24px;
+}
+</style>
 </head>
 <body>
     <div id="container">
         <div id="game">
             <header>
+                  <div class="float_left">
                   <button id="btn" onclick="helpFunction()"><i class="far fa-question-circle" id="help"></i></button>
+                  <a href="/myword" id="custom_link">Custom</a>
+                  </div>
                   <h1 class="title">ANIMAL KINGDOM</h1>
-                  <div><button id="btn" onclick="statsFunction()"><i class="fas fa-chart-bar" id="stats"></i></button>
-                      <button id="btn" onclick="settingsFunction()"><i class="fa-solid fa-gear" id="settings"></i></div></button>
+                  <div>
+                      <div class="float_left" id="lang_label">
+                        <p>{{ language }}</p>
+                      </div>
+                      <div class="float_left" id="icon_box">
+                          <button id="btn" onclick="statsFunction()"><i class="fas fa-chart-bar" id="stats"></i></button>
+                          <button id="btn" onclick="settingsFunction()"><i class="fa-solid fa-gear" id="settings"></i></button>
+                      </div>
+                  </div>
             </header>
             <div id = "board-container">
                 <div id = "board_div">
@@ -328,9 +352,12 @@
             </div>
             <div id="message_div">
                 <p>{{ message }}</p>
-                {% if status == False %}
+                {% if status == False and custom_check == False %}
                 <p>Would you like to play again?</p>
                 <form method="POST">
+                    <input type="hidden" id="curr_lang" name="lang_toggle" value={{ language }}>
+                    <input type="hidden" id="curr_wlength" name="c_length" value={{ word_length }}>
+                    <input type="hidden" id="curr_numtries" name="c_numattempts" value={{ num_tries }}>
                     <input type="submit" value="yes" name="guess" />
                 </form>
                 {% endif %}
@@ -394,7 +421,7 @@
                 <!-- Modal content -->
                 <div class="modal-content">
                   <span class="close" id="close-settings">&times;</span>
-
+                    {% if custom_check == False %}
                   <h2>SETTINGS</h2>
                   <form method="POST">
                     <!--<div class="toggle_div">
@@ -412,7 +439,7 @@
                     </div>-->
                        <label for="chooselang"><strong>Language</strong>: <span id=""></span></label>
                        <select id="chooselang" name="lang_toggle">
-                          <option value="{{ language }}">{{ language }}</option>
+                          <option value= {{ language }} >{{ language }}</option>
                           <option value = "English" >English</option>
                           <option value = "Telugu">Telugu</option>
                        </select>
@@ -452,6 +479,9 @@
                   </h3>-->
                   <button type="submit" id="submit_button" name="guess" value="yes">Submit Changes</button>
                   </form>
+                    {% else %}
+                    <h2> Sorry, settings cannot be changed in custom word mode. </h2>
+                    {% endif %}
                 </div>
             </div>
         </div>
