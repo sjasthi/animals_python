@@ -69,6 +69,7 @@ custom_words = []
 custom_message = ''
 custom_check = False
 c_id = ' '
+custom_success_flag = False
 
 @app.route('/')
 @app.route('/myword/<custom_id>')
@@ -116,8 +117,10 @@ def index(custom_id=None):
 @app.route('/myword')
 def custom_form():
     global custom_message
+    global custom_success_flag
+
     # session["message"] = 'Enter a word with no repeating letters. '
-    return render_template("myword.html", message = custom_message)
+    return render_template("myword.html", message = custom_message, custom_flag = custom_success_flag)
 
 @app.route('/myword', methods=['POST'])
 def custom_input():
@@ -126,6 +129,7 @@ def custom_input():
     global word_length
     global custom_word
     global custom_message
+    global custom_success_flag
 
     language = request.form['custom_lang']
     custom_word = request.form['custom_input']
@@ -137,8 +141,9 @@ def custom_input():
         return redirect(url_for("custom_form"))
 
     custom_words.append([language, custom_word, word_length, num_tries])
+    custom_success_flag = True
     print(custom_words)
-    custom_message = "Your custom word can now be played at /myword/" + str(custom_words.index([language, custom_word, word_length, num_tries]))
+    custom_message = "https://animals.pythonanywhere.com/myword/" + str(custom_words.index([language, custom_word, word_length, num_tries]))
     return redirect(url_for("custom_form"))
 
 #validate user input
