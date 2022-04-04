@@ -143,7 +143,7 @@ def custom_input():
     custom_words.append([language, custom_word, word_length, num_tries])
     custom_success_flag = True
     print(custom_words)
-    custom_message = "https://animals.pythonanywhere.com/myword/" + str(custom_words.index([language, custom_word, word_length, num_tries]))
+    custom_message = "Your custom word can now be played at /myword/" + str(custom_words.index([language, custom_word, word_length, num_tries]))
     return redirect(url_for("custom_form"))
 
 #validate user input
