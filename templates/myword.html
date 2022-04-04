@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Word</title>
+<style>
+ html,
+        body {
+          height: 100%;
+          font-family: "Helvetica";
+          margin: 0;
+          padding: 0;
+        }
+        header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 66%;
+          border-bottom: 1px solid rgb(58, 58, 60);
+          margin-bottom: 48px;
+        }
+#container {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          height: 100%;
+          width: 100%;
+        }
+.float_left{
+    float:left;
+}
+.title{
+    margin-right: 33%;
+}
+a:link {
+   text-decoration: none;
+}
+
+</style>
+</head>
+<body>
+      <div id="container">
+      <header>
+          <a href="/">< back</a>
+          <h1 class="title">ANIMAL KINGDOM</h1>
+      </header>
+          <h2>Custom Word</h2>
+          <p>Choose a language and enter a 4-8 character word to create a game.  Your word must not create any duplicate characters.</p>
+      <form action="/myword" method="POST">
+           <label for="custom_lang"><strong>Language</strong>: <span id=""></span></label>
+           <select id="custom_lang" name="custom_lang">
+              <option value = "English" >English</option>
+              <option value = "Telugu">Telugu</option>
+           </select>
+        <br>
+        <br>
+           <label for="custom_input"><strong>Word</strong>: </label>
+           <input type="text" id="custom_input" name="custom_input" title="Enter a word with no repeating letters"
+                                   required/>
+        <br>
+        <br>
+          <!--<label for="custom_attempts"><strong>Number of Attempts</strong>: <span id=""></span></label>
+          <select id="custom_attempts" name="custom_attempts">
+              <option value = 4>4</option>
+              <option value = 5>5</option>
+              <option value = 6>6</option>
+              <option value = 7>7</option>
+              <option value = 8>8</option>
+              <option value = 9>9</option>
+              <option value = 10>10</option>
+              <option value = 11>11</option>
+              <option value = 12>12</option>
+              <option value = 13>13</option>
+              <option value = 14>14</option>
+              <option value = 15>15</option>
+              <option value = 16>16</option>
+          </select>-->
+      <br>
+	  <br>
+      <div id="message_div">
+          {% if custom_flag == False %}
+            <p>{{ message }}</p>
+          {% else %}
+          <p>Your custom word can now be played at <a href="{{ message }}" target="_blank">{{ message }}</a></p>
+          {% endif %}
+
+      </div>
+      <button type="submit" id="submit_button" name="guess" value="yes">Submit Word</button>
+      </form>
+      </div>
+</body>
+</html>

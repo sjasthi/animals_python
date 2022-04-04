@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, redirect, url_for, request
-from flask_session import Session
+from flask_session.__init__  import Session
 from tempfile import mkdtemp
 import csv
 import random
@@ -65,11 +65,29 @@ word_array = []
 baseword_array = []
 guess_array = []
 used_words = []
-
-
+custom_words = []
+custom_message = ''
+custom_check = False
+c_id = ' '
+custom_success_flag = False
 
 @app.route('/')
-def index():
+@app.route('/myword/<custom_id>')
+def index(custom_id=None):
+    global custom_check
+    global c_id
+
+    if custom_id != None:
+        custom_check = True
+        c_id = custom_id
+
+
+    print("custom check check: " + str(custom_check))
+    print("status check: " + str(status))
+
+    # if not wordlist:
+    #     create_wordlist()
+    #     choose_word(wordlist, language)
 
     if "board" not in session:
         session["board"] = []
@@ -92,11 +110,69 @@ def index():
     if "message" not in session:
         session["message"] = 'Make your first guess'
 
-    return render_template("game.html", game=session["board"], score=session["score"], message=session["message"], status=status, num_tries=num_tries, word_length=word_length, language=language, icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four, icon_five=icon_five)
+    return render_template("game.html", game=session["board"], score=session["score"], message=session["message"], status=status, custom_check = custom_check, num_tries=num_tries, word_length=word_length, language=language, icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four, icon_five=icon_five)
 
+
+
+@app.route('/myword')
+def custom_form():
+    global custom_message
+    global custom_success_flag
+
+    # session["message"] = 'Enter a word with no repeating letters. '
+    return render_template("myword.html", message = custom_message, custom_flag = custom_success_flag)
+
+@app.route('/myword', methods=['POST'])
+def custom_input():
+
+    global language
+    global word_length
+    global custom_word
+    global custom_message
+    global custom_success_flag
+
+    language = request.form['custom_lang']
+    custom_word = request.form['custom_input']
+    word_length = len(custom_word)
+
+
+    while input_check(custom_word) == False:
+        session["message"] = 'Oops. Make sure your word contains no repeating letters.'
+        return redirect(url_for("custom_form"))
+
+    custom_words.append([language, custom_word, word_length, num_tries])
+    custom_success_flag = True
+    print(custom_words)
+    custom_message = "https://animals.pythonanywhere.com/myword/" + str(custom_words.index([language, custom_word, word_length, num_tries]))
+    return redirect(url_for("custom_form"))
+
+#validate user input
+def input_check(input):
+
+    flag = True
+    global guess_array
+
+    params = {'string': input, 'language': language}
+    response = requests.get(request_path, params,
+                            headers={'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11'})
+    # convert text response to json array
+    json_array = json.loads(response.text[2:])
+    print("Guess array: ", json_array['data'])
+    guess_array = json_array['data']
+    print("Guess array length: ", len(json_array['data']))
+    if len(json_array['data']) != word_length:
+        flag = False
+    else:
+        for char in guess_array:
+            print("character count: ", char, guess_array.count(char))
+            if guess_array.count(char) > 1:
+                flag = False
+
+    return flag
 
 @app.route('/', methods=['POST'])
-def play():
+@app.route('/myword/<custom_id>', methods=['POST'])
+def play(custom_id = None):
 
     global num_tries
     global word_length
@@ -107,6 +183,15 @@ def play():
     global word_array
     global baseword_array
     global guess_array
+    global c_id
+    global counter
+    global status
+    global custom_check
+
+    if not wordlist:
+        wordlist = create_wordlist()
+        word = choose_word(wordlist, language)
+
     guess = request.form['guess'].lower()
 
     if guess != 'yes':
@@ -169,53 +254,66 @@ def play():
 
             return redirect(url_for("index"))
 
+    ########### NOT RUN IN CUSTOM MODE
     else:
-        counter = 0
-        status = True
-        session.clear()
-        if language != request.form['lang_toggle'] or word_length != request.form['c_length'] or num_tries != int(request.form['c_numattempts']):
-            language = request.form['lang_toggle']
-            word_length = int(request.form['c_length'])
-            num_tries = int(request.form['c_numattempts'])
-            word_index = 0
-            wordlist.clear()
-            wordlist = create_wordlist()
-            word = choose_word(wordlist, language)
-        else:
-            word = choose_word(wordlist, language)
-        print(word)
-        return redirect(url_for("index"))
+        if not custom_check:
+            counter = 0
+            status = True
+            session.clear()
+            if language != request.form['lang_toggle'] or word_length != request.form['c_length'] or num_tries != int(request.form['c_numattempts']):
+                language = request.form['lang_toggle']
+                word_length = int(request.form['c_length'])
+                num_tries = int(request.form['c_numattempts'])
+                word_index = 0
+                wordlist.clear()
+                wordlist = create_wordlist()
+                word = choose_word(wordlist, language)
+            else:
+                word = choose_word(wordlist, language)
+
+            return redirect(url_for("index"))
 
 
 def create_wordlist():
-
     global wordlist
+    global language
+    global word_length
 
-    ###############To Be Implemented - Need to change name of csv files
-    #input_file = "static/words_" + language + "_" + word_length + ".csv"
-    #####temp
-    input_file = "static/words_" + language.lower() + ".csv"
-
-    if language == "Telugu":
-        #open input file
-        with open(input_file, 'r', encoding='utf-8') as csvfile:
-            readCSV = csv.reader(csvfile, delimiter=',')
-
-            #read each row in CSV file and store values in variables
-            for row in readCSV:
-                wordlist.append(row[1])
+    if custom_check:
+        language = custom_words[int(c_id)][0]
+        wordlist.append(custom_words[int(c_id)][1])
+        word_length = custom_words[int(c_id)][2]
+        print("After custom_check:")
+        print("language: " + language)
+        print("wordlist: " + wordlist[0])
+        print("word length: " + str(word_length))
 
     else:
-        #open input file
-        with open(input_file) as csvfile:
-            readCSV = csv.reader(csvfile, delimiter=',')
+        ###############To Be Implemented - Need to change name of csv files
+        #input_file = "static/words_" + language + "_" + word_length + ".csv"
+        #####temp
+        input_file = "static/words_" + language.lower() + ".csv"
 
-            #read each row in CSV file and store values in variables
-            for row in readCSV:
-                wordlist.append(row[1])
+        if language == "Telugu":
+            #open input file
+            with open(input_file, 'r', encoding='utf-8') as csvfile:
+                readCSV = csv.reader(csvfile, delimiter=',')
 
-    random.shuffle(wordlist)
-    print("Wordlist: ", wordlist)
+                #read each row in CSV file and store values in variables
+                for row in readCSV:
+                    wordlist.append(row[1])
+
+        else:
+            #open input file
+            with open(input_file) as csvfile:
+                readCSV = csv.reader(csvfile, delimiter=',')
+
+                #read each row in CSV file and store values in variables
+                for row in readCSV:
+                    wordlist.append(row[1])
+
+        random.shuffle(wordlist)
+        print("Wordlist: ", wordlist)
 
     return wordlist
 
@@ -259,7 +357,7 @@ def choose_word(wordlist, language):
         else:
             used_words.append(word)
             print("used words list: ", used_words)
-        
+
     return word
 
 
@@ -287,15 +385,7 @@ def input_check(input):
 
     return flag
 
-
-def main():
-    global word
-    global wordlist
-
-    wordlist = create_wordlist()
-    word = choose_word(wordlist,language)
-    # if __name__ == "__main__":
+if __name__ == "__main__":
     app.run( )
 
 
-main()
