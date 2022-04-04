@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, redirect, url_for, request
-from flask_session import Session
+from flask_session.__init__  import Session
 from tempfile import mkdtemp
 import csv
 import random
