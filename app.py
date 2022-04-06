@@ -391,6 +391,6 @@ def input_check(input):
     return flag
 
 if __name__ == "__main__":
-    app.run( )
+    app.run(debug=True)
 
 
