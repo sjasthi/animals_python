@@ -248,12 +248,12 @@ def play(custom_id = None):
                 counter += 1
                 session["message"] = 'Guess another word'
 
-            # return redirect(url_for("index"))
-            return render_template("game.html", game=session["board"], score=session["score"],
-                                   message=session["message"], status=status, custom_check=custom_check,
-                                   num_tries=int(num_tries), word_length=word_length, language=language,
-                                   icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four,
-                                   icon_five=icon_five)
+            return redirect(url_for("index"))
+            # return render_template("game.html", game=session["board"], score=session["score"],
+            #                        message=session["message"], status=status, custom_check=custom_check,
+            #                        num_tries=int(num_tries), word_length=word_length, language=language,
+            #                        icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four,
+            #                        icon_five=icon_five)
 
     ########### NOT RUN IN CUSTOM MODE
     else:
@@ -272,12 +272,12 @@ def play(custom_id = None):
             else:
                 word = choose_word(wordlist, language)
 
-            # return redirect(url_for("index"))
-            return render_template("game.html", game=session["board"], score=session["score"],
-                                   message=session["message"], status=status, custom_check=custom_check,
-                                   num_tries=int(num_tries), word_length=word_length, language=language,
-                                   icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four,
-                                   icon_five=icon_five)
+            return redirect(url_for("index"))
+            # return render_template("game.html", game=session["board"], score=session["score"],
+            #                        message=session["message"], status=status, custom_check=custom_check,
+            #                        num_tries=int(num_tries), word_length=word_length, language=language,
+            #                        icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four,
+            #                        icon_five=icon_five)
 
 def create_wordlist():
     global wordlist
@@ -391,6 +391,4 @@ def input_check(input):
     return flag
 
 if __name__ == "__main__":
-    app.run(debug=True)
-
-
+    app.run( )
