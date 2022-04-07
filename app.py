@@ -85,10 +85,6 @@ def index(custom_id=None):
     print("custom check check: " + str(custom_check))
     print("status check: " + str(status))
 
-    # if not wordlist:
-    #     create_wordlist()
-    #     choose_word(wordlist, language)
-
     if "board" not in session:
         session["board"] = []
         row_list = []
@@ -110,7 +106,7 @@ def index(custom_id=None):
     if "message" not in session:
         session["message"] = 'Make your first guess'
 
-    return render_template("game.html", game=session["board"], score=session["score"], message=session["message"], status=status, custom_check = custom_check, num_tries=num_tries, word_length=word_length, language=language, icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four, icon_five=icon_five)
+    return render_template("game.html", game=session["board"], score=session["score"], message=session["message"], status=status, custom_check = custom_check, num_tries=int(num_tries), word_length=word_length, language=language, icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four, icon_five=icon_five)
 
 
 
@@ -143,7 +139,7 @@ def custom_input():
     custom_words.append([language, custom_word, word_length, num_tries])
     custom_success_flag = True
     print(custom_words)
-    custom_message = "https://animals.pythonanywhere.com/myword/" + str(custom_words.index([language, custom_word, word_length, num_tries]))
+    custom_message = "Your custom word can now be played at /myword/" + str(custom_words.index([language, custom_word, word_length, num_tries]))
     return redirect(url_for("custom_form"))
 
 #validate user input
@@ -253,6 +249,11 @@ def play(custom_id = None):
                 session["message"] = 'Guess another word'
 
             return redirect(url_for("index"))
+            # return render_template("game.html", game=session["board"], score=session["score"],
+            #                        message=session["message"], status=status, custom_check=custom_check,
+            #                        num_tries=int(num_tries), word_length=word_length, language=language,
+            #                        icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four,
+            #                        icon_five=icon_five)
 
     ########### NOT RUN IN CUSTOM MODE
     else:
@@ -272,7 +273,11 @@ def play(custom_id = None):
                 word = choose_word(wordlist, language)
 
             return redirect(url_for("index"))
-
+            # return render_template("game.html", game=session["board"], score=session["score"],
+            #                        message=session["message"], status=status, custom_check=custom_check,
+            #                        num_tries=int(num_tries), word_length=word_length, language=language,
+            #                        icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four,
+            #                        icon_five=icon_five)
 
 def create_wordlist():
     global wordlist
@@ -387,5 +392,3 @@ def input_check(input):
 
 if __name__ == "__main__":
     app.run( )
-
-
