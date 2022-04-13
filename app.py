@@ -139,7 +139,7 @@ def custom_input():
     custom_words.append([language, custom_word, word_length, num_tries])
     custom_success_flag = True
     print(custom_words)
-    custom_message = "Your custom word can now be played at /myword/" + str(custom_words.index([language, custom_word, word_length, num_tries]))
+    custom_message = "Your custom word can now be played at http://animals.pythonanywhere/myword/" + str(len(custom_words)-1)
     return redirect(url_for("custom_form"))
 
 #validate user input
@@ -255,12 +255,18 @@ def play(custom_id = None):
             #                        icon_one=icon_one, icon_two=icon_two, icon_three=icon_three, icon_four=icon_four,
             #                        icon_five=icon_five)
 
-    ########### NOT RUN IN CUSTOM MODE
+
     else:
-        if not custom_check:
+        # if not custom_check:
             counter = 0
             status = True
             session.clear()
+            if custom_check:
+                custom_check = False
+                word_index = 0
+                wordlist.clear()
+                wordlist = create_wordlist()
+                word = choose_word(wordlist, language)
             if language != request.form['lang_toggle'] or word_length != request.form['c_length'] or num_tries != int(request.form['c_numattempts']):
                 language = request.form['lang_toggle']
                 word_length = int(request.form['c_length'])
@@ -330,6 +336,7 @@ def choose_word(wordlist, language):
     global word_array
     global baseword_array
     global used_words
+    global custom_check
     word = wordlist[word_index]
     word_index += 1
 
@@ -357,11 +364,12 @@ def choose_word(wordlist, language):
         choose_word(wordlist,language)
     else:
         word = "".join(word_array)
-        if word in used_words:
+        if not custom_check and word in used_words:
             choose_word(wordlist, language)
         else:
-            used_words.append(word)
-            print("used words list: ", used_words)
+            if not custom_check:
+                used_words.append(word)
+                print("used words list: ", used_words)
 
     return word
 
