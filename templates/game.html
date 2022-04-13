@@ -352,7 +352,7 @@ a:link {
             </div>
             <div id="message_div">
                 <p>{{ message }}</p>
-                {% if status == False and custom_check == False %}
+                {% if status == False %}
                 <p>Would you like to play again?</p>
                 <form method="POST">
                     <input type="hidden" id="curr_lang" name="lang_toggle" value={{ language }}>
@@ -430,7 +430,6 @@ a:link {
                         </div>
                         <div class="div_block" id="switch_div">
                         <label class="switch">
-
                             <input class="switch-input" type="checkbox" name="lang_toggle" id="lang_toggle" value="english" onclick="toggle_lang()" value= {{ language }}>
                             <span class="switch-label" data-on="Telugu" data-off="English"></span>
                             <span class="switch-handle"></span>
@@ -597,3 +596,4 @@ a:link {
 <!--<a href="https://www.flaticon.com/free-icons/fish" title="fish icons">Fish icons created by Freepik - Flaticon</a>-->
 </body>
 </html>
+
