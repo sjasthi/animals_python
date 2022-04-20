@@ -191,8 +191,8 @@ def custom_input():
     #custom_words.append([language, custom_word, word_length, num_tries])
     custom_success_flag = True
     #print(custom_words)
-    custom_message = "http://animals.pythonanywhere/myword/" + str(next_index)
-    #custom_message = "http://127.0.0.1:5000/myword/" + str(next_index)
+    #custom_message = "http://animals.pythonanywhere/myword/" + str(next_index)
+    custom_message = "http://127.0.0.1:5000/myword/" + str(next_index)
     return redirect(url_for("custom_form"))
 
 #validate user input
