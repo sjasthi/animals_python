@@ -271,7 +271,9 @@ a:link {
             <header>
                   <div class="float_left">
                   <button id="btn" onclick="helpFunction()"><i class="far fa-question-circle" id="help"></i></button>
-                  <a href="/myword" id="custom_link">Custom</a>
+                  {% if in_play == False and end_game == False %}
+                    <a href="/myword" id="custom_link">Custom</a>
+                  {% endif %}
                   </div>
                   <h1 class="title">ANIMAL KINGDOM</h1>
                   <div>
@@ -279,8 +281,10 @@ a:link {
                         <p>{{ language }}</p>
                       </div>
                       <div class="float_left" id="icon_box">
-                          <button id="btn" onclick="statsFunction()"><i class="fas fa-chart-bar" id="stats"></i></button>
+                          <!--<button id="btn" onclick="statsFunction()"><i class="fas fa-chart-bar" id="stats"></i></button>-->
+                           {% if in_play == False and end_game == False %}
                           <button id="btn" onclick="settingsFunction()"><i class="fa-solid fa-gear" id="settings"></i></button>
+                            {% endif %}
                       </div>
                   </div>
             </header>
@@ -352,13 +356,22 @@ a:link {
             </div>
             <div id="message_div">
                 <p>{{ message }}</p>
-                {% if status == False %}
-                <p>Would you like to play again?</p>
+                {% if end_game == True and custom_check == False %}
+<!--                <p>Would you like to play again?</p>-->
                 <form method="POST">
                     <input type="hidden" id="curr_lang" name="lang_toggle" value={{ language }}>
                     <input type="hidden" id="curr_wlength" name="c_length" value={{ word_length }}>
                     <input type="hidden" id="curr_numtries" name="c_numattempts" value={{ num_tries }}>
-                    <input type="submit" value="yes" name="guess" />
+<!--                    <input type="submit" value="yes" name="guess">Back to Home</input>-->
+                    <button type="submit" value="yes" name="guess">Back to Home</button>
+                </form>
+                {% elif end_game == True and custom_check == True %}
+                <form method="POST">
+                    <input type="hidden" id="curr_lang" name="lang_toggle" value={{ language }}>
+                    <input type="hidden" id="curr_wlength" name="c_length" value={{ word_length }}>
+                    <input type="hidden" id="curr_numtries" name="c_numattempts" value={{ num_tries }}>
+<!--                    <input type="submit" value="yes" name="guess">Back to Home</input>-->
+                    <button type="submit" value="yes" name="guess">Play today's Word of the Day</button>
                 </form>
                 {% endif %}
             </div>
