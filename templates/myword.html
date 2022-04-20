@@ -78,9 +78,11 @@ a:link {
       <br>
 	  <br>
       <div id="message_div">
-
+            {% if custom_flag == False %}
             <p>{{ message }}</p>
-
+            {% else %}
+            <p>You can play your custom word at <a href="{{message}}" target="_blank">{{message}}</a></p>
+            {% endif %}
       </div>
       <button type="submit" id="submit_button" name="guess" value="yes">Submit Word</button>
       </form>
