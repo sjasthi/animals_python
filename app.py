@@ -132,7 +132,12 @@ def index(custom_id=None, lang=None):
         word_length = len(word_array)
         print("inital word_length", word_length)
         # session['num_tries'] = num_tries
-
+    elif session['initial'] == True:
+        wordlist = create_wordlist()
+        print("inital wordlist", wordlist)
+        word = choose_word(wordlist, language)
+        print("inital word", word)
+        word_length = len(word_array)
 
 
     session['custom_success_flag'] = False
@@ -198,6 +203,9 @@ def custom_input():
     else:
         set_encoding = "ascii"
 
+    if session['language'] == 'English':
+        custom_word = custom_word.lower()
+
     if not os.path.exists(cust_wordpath):
         with open(cust_wordpath, mode='w', encoding = set_encoding, newline='') as wf:
             next_index = 1
@@ -218,7 +226,7 @@ def custom_input():
 
     session['custom_success_flag'] = True
 
-    #session['custom_message'] = "http://animals.pythonanywhere/myword/" + str(next_index)
+    # session['custom_message'] = "/myword/" + cust_language + "/" + str(next_index)
     session['custom_message'] = "http://127.0.0.1:5000/myword/" + cust_language + "/" + str(next_index)
 
     return redirect(url_for("custom_form"))
