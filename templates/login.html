@@ -22,7 +22,6 @@
           font-family: "Helvetica";
           margin: 0;
           padding: 0;
-
         }
         header {
           display: flex;
@@ -30,7 +29,6 @@
           justify-content: space-between;
           border-bottom: 1px solid rgb(58, 58, 60);
           margin-bottom: 48px;
-
         }
         #settings {
             margin-left:12px;
@@ -54,7 +52,6 @@
             height: 70px;
             font-size: 30px;
             text-align: center;
-            background-color: rgba(6,200,100,.1)
         }
          #score_cell {
             border: 1px solid white;
@@ -63,14 +60,10 @@
             height: 70px;
             font-size: 30px;
             text-align: center;
-            background-color: rgba(6,200,200,.2)
         }
         #inputfield {
             width: 120px;
             font-size: 24px;
-            margin-left:25%;
-            border-radius: 5px;
-            border: 1px solid black;
         }
         #inputbutton{
             font-size: 24px;
@@ -87,10 +80,9 @@
             text-align: center;
         }
         #btn{
-            background-color: #FFF;
+            background-color: #FFFFFF;
             border:0px;
         }
-
         #message_div {
             width:100%;
             text-align: center;
@@ -322,16 +314,7 @@ a:link {
 #custom_link{
     margin-left: 24px;
 }
-#logout_link{
-    margin-left: 24px;
-    color: #000;
-}
-#logout_link:hover{
-    color: blue;
-}
-.title {
- margin: auto;
-}
+
 .gradient-button {
     margin: 8px 10px 12px;
     font-family: "Arial Black", Gadget, sans-serif;
@@ -355,36 +338,6 @@ a:link {
 .gradient-button:hover{
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     margin: 8px 10px 12px;
-}
-#submit{
-padding: 5%;
-}
-
-
-.form-submit-button {
-background: #B9DFFF;
-color: #fff;
-border: 1px solid #eee;
-border-radius: 20px;
-box-shadow: 5px 5px 5px #eee;
-text-shadow: none;
-font-size:12px;
-width:96px;
-
-}
-.form-submit-button:hover {
-background: #016ABC;
-color: #fff;
-border: 1px solid #eee;
-border-radius: 20px;
-box-shadow: 5px 5px 5px #eee;
-text-shadow: none;
-}
-a:hover{
-color: blue;
-}
-#help_icons{
-text-align:center;
 }
 
 
@@ -417,7 +370,6 @@ text-align:center;
                            {% if in_play == False and end_game == False %}
                           <button id="btn" onclick="settingsFunction()"><i class="fa-solid fa-gear" id="settings"></i></button>
                             {% endif %}
-                          <a href="/logout" id="logout_link">Log Out</a>
                       </div>
                   </div>
             </header>
@@ -442,7 +394,7 @@ text-align:center;
                          <form method="POST">
                             <input type="text" id="inputfield" name="guess" title="Enter a 5-letter word with no repeating letters"
                                    required/>
-                            <input type="submit" class="form-submit-button" id="inputbutton" value="Submit" />
+                            <input type="submit" id="inputbutton" value="Submit" />
                          </form>
                         {% endif %}
                     </div>
@@ -496,7 +448,7 @@ text-align:center;
                     <input type="hidden" id="curr_wlength" name="c_length" value={{ word_length }}>
                     <input type="hidden" id="curr_numtries" name="c_numattempts" value={{ num_tries }}>
 <!--                    <input type="submit" value="yes" name="guess">Back to Home</input>-->
-                    <button type="submit" class="form-submit-button" value="yes" name="guess">Back to Home</button>
+                    <button type="submit" value="yes" name="guess">Back to Home</button>
                 </form>
                 {% elif end_game == True and custom_check == True %}
                 <form method="POST">
@@ -504,7 +456,7 @@ text-align:center;
                     <input type="hidden" id="curr_wlength" name="c_length" value={{ word_length }}>
                     <input type="hidden" id="curr_numtries" name="c_numattempts" value={{ num_tries }}>
 <!--                    <input type="submit" value="yes" name="guess">Back to Home</input>-->
-                    <button type="submit" class="form-submit-button" value="yes" name="guess">Play today's Word of the Day</button>
+                    <button type="submit" value="yes" name="guess">Play today's Word of the Day</button>
                 </form>
                 {% endif %}
             </div>
@@ -518,42 +470,27 @@ text-align:center;
 
                   <p>
                     This is a word guessing game where you try to guess the mystery word.
-                      To begin, guess a word with the same number of letters as the number of boxes in the guess row
-                      (the lighter colored boxes).  Your word cannot not contain any repeating characters.
+                      To begin, guess a word of the same length as the number of boxes in the guess row
+                      and does not contain any repeating characters.
                   </p>
 
                   <p>
-                    After each guess, you will be given animal icons next to the same row indicating
-                      how well you guessed.<br><br>
-                      Different animal icons have different meanings.<br><br>
-                      If playing the English version of the game, it plays like its predecessor - a game called Bulls
-                      and Cows.<br><br>  In that game two possible icons are given to give you hints after each of your guesses.<br>
-                        Bull = a letter in the mystery word that is in the correct position.<br>
-                        Cow = a letter in the mystery word that is in an incorrect position.<br>
-                        No icons are posted for characters not in the word.<br><br>  Please note that the icons do not correlate
-                        to the character in the same position in the guess word.  They only indicate how many characters
-                        in the guess word are in the mystery word.<br><br>
-                      In the Telugu version of the game, five icons are used:<br>
-                        Elephant = a correct logical character in the correct position in the mystery word.<br>
-                        Fish = a correct logical character but not in the correct position in the mystery word.<br>
-                        Horse = a correct base character in the correct position in the mystery word.<br>
-                        Frog = a correct base character but not in the correct position in the mystery word.<br>
-                        Mouse = a character not in the mystery word.<br>
-                        <br>
-                      Just like the English version of the game, the animal icons on the scorecard do not directly correspond
+                    After each guess, you will be given animal icons next to the same row that indicate
+                      how well you guessed.
+                      Different animal icons have different meanings.
+                        Elephant = a correct logical character in the correct position in the mystery word.
+                        Fish = a correct logical character but not in the correct position in the mystery word.
+                        Horse = a correct base character in the correct position in the mystery word.
+                        Frog = a correct base character but not in the correct position in the mystery word.
+
+                      Please note that the animal icons on the scorecard do not directly correspond
                       to the characters in the same position in the guess word.  They only give you an indication of
                       how many of each type of animal icon is in the guess word.
 
                   </p>
-                    <div id="help_icons">
-                   <img src="/static/bull_1.png" id="examples" />
-                    <img src="/static/cow_1.png" id="examples" />
+
                   <img src="/static/elephant_1.png" id="examples" />
-                  <img src="/static/fish_1.png" id="examples" />
-                    <img src="/static/horse_1.png" />
-                    <img src="/static/frog_1.png" id="examples" />
-                    <img src="/static/mouse_1.png" id="examples" />
-                    </div>
+
                   <hr />
                   <p></p>
                 </div>
@@ -578,33 +515,33 @@ text-align:center;
                 </div>
             </div>
             <!------------------------------------------------------------------------------------------>
-<!--            <div id="log-settings-modal" class="login_modal">-->
-<!--                &lt;!&ndash; Modal content &ndash;&gt;-->
-<!--                <div class="login_modal-content">-->
-<!--                  &lt;!&ndash;<span class="close" id="log-close-settings">&times;</span>&ndash;&gt;-->
-<!--                    {% if custom_check == False %}-->
-<!--                  <h2 class="login_message">Welcome to Animal Kingdom!</h2>-->
-<!--                    <br>-->
-<!--                    <h4 class="login_message">Please enter your name:</h4>-->
-<!--                  <form method="POST">-->
+            <div id="log-settings-modal" class="login_modal">
+                <!-- Modal content -->
+                <div class="login_modal-content">
+                  <!--<span class="close" id="log-close-settings">&times;</span>-->
+                    {% if custom_check == False %}
+                  <h2 class="login_message">Welcome to Animal Kingdom!</h2>
+                    <br>
+                    <h4 class="login_message">Please enter your name:</h4>
+                  <form method="POST">
 
-<!--                      <input type="text" class="login_box" name="login_input" required></input>-->
+                      <input type="text" class="login_box" name="user" required></input>
 
-<!--                      <br>-->
-<!--                      <br>-->
+                      <br>
+                      <br>
 
-<!--                  <br>-->
-<!--                  &lt;!&ndash;<h3>-->
-<!--                    <strong>Dictionary Check</strong>: <span id=""></span>-->
-<!--                  </h3>&ndash;&gt;-->
-<!--                  &lt;!&ndash;<button type="submit" class="login_button" id="login_button" name="login" >Let's Play!</button>&ndash;&gt;-->
-<!--                  <button type="submit" class="gradient-button gradient-button-4" id="login_button" name="login" >Let's Play!</button>-->
-<!--                  </form>-->
-<!--                    {% else %}-->
-<!--                    <h2> Sorry, settings cannot be changed in custom word mode. </h2>-->
-<!--                    {% endif %}-->
-<!--                </div>-->
-<!--            </div>-->
+                  <br>
+                  <!--<h3>
+                    <strong>Dictionary Check</strong>: <span id=""></span>
+                  </h3>-->
+                  <!--<button type="submit" class="login_button" id="login_button" name="login" >Let's Play!</button>-->
+                  <button type="submit" class="gradient-button gradient-button-4" id="login_button" name="login" >Let's Play!</button>
+                  </form>
+                    {% else %}
+                    <h2> Sorry, settings cannot be changed in custom word mode. </h2>
+                    {% endif %}
+                </div>
+            </div>
 
 
 
@@ -648,17 +585,17 @@ text-align:center;
                           <option value = "Telugu">Telugu</option>
                        </select>
                     <br>
-<!--                      <br>-->
-<!--                      <label for="chooselength"><strong>Word Length</strong>: <span id=""></span></label>-->
-<!--                      <select id="chooselength" name="c_length">-->
-<!--                          <option value={{ word_length }}>{{ word_length }}</option>-->
-<!--                          <option value = 4>4</option>-->
-<!--                          <option value = 5>5</option>-->
-<!--                          <option value = 6>6</option>-->
-<!--                          <option value = 7>7</option>-->
-<!--                          <option value = 8>8</option>-->
-<!--                      </select>-->
-<!--                      <br>-->
+                      <br>
+                      <label for="chooselength"><strong>Word Length</strong>: <span id=""></span></label>
+                      <select id="chooselength" name="c_length">
+                          <option value={{ word_length }}>{{ word_length }}</option>
+                          <option value = 4>4</option>
+                          <option value = 5>5</option>
+                          <option value = 6>6</option>
+                          <option value = 7>7</option>
+                          <option value = 8>8</option>
+                      </select>
+                      <br>
                       <br>
                       <label for="choosenumattempts"><strong>Number of Attempts</strong>: <span id=""></span></label>
                       <select id="choosenumattempts" name="c_numattempts">
