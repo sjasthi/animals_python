@@ -35,6 +35,25 @@
 a:link {
    text-decoration: none;
 }
+.form-submit-button {
+background: #B9DFFF;
+color: #fff;
+border: 1px solid #eee;
+border-radius: 20px;
+box-shadow: 5px 5px 5px #eee;
+text-shadow: none;
+font-size:12px;
+width:96px;
+
+}
+.form-submit-button:hover {
+background: #016ABC;
+color: #fff;
+border: 1px solid #eee;
+border-radius: 20px;
+box-shadow: 5px 5px 5px #eee;
+text-shadow: none;
+}
 
 </style>
 </head>
@@ -84,7 +103,7 @@ a:link {
             <p>You can play your custom word at <a href="{{message}}" target="_blank">{{message}}</a></p>
             {% endif %}
       </div>
-      <button type="submit" id="submit_button" name="guess" value="yes">Submit Word</button>
+      <button type="submit" class="form-submit-button" id="submit_button" name="guess" value="yes">Submit Word</button>
       </form>
       </div>
 </body>
